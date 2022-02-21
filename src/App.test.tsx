@@ -1,6 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
+import { getUser } from './get-user';
+
+jest.mock('./get-user');
 
 describe('when everything is OK', () => {
   beforeEach(() => {  // Con beforeEach podemos evitar repetir el render(<componente/>)
