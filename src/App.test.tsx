@@ -3,9 +3,11 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 describe('when everything is OK', () => {
-  
+  beforeEach(() => {  // Con beforeEach podemos evitar repetir el render(<componente/>)
+    render(<App/>);
+  })
   test('should render the App component without crashing', () => {
-    render(<App />);
+    // render(<App />); con beforeEach nos ahorramos repetir esta línea
     screen.debug();
   })
 // Testeamos que exista o no una palabra en el documento con try & catch
@@ -22,10 +24,35 @@ describe('when everything is OK', () => {
   // })
 
   test('should select the children that is being passed to the CustomInput component', () => {
-    render(<App />);
+    // render(<App />); con beforeEach nos ahorramos repetir esta línea
     screen.getByText('Input:');
 //  screen.getByText(/Input/);
 //  Podemos poner una regular expression en vez de un string
+  })
+
+  test('should select the input element by its role', () => {
+    // render(<App />); con beforeEach nos ahorramos repetir esta línea
+    screen.getByRole('textbox'); // textbox equivale al role del input
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+  })
+
+  test('should select a label element by its text', () => {
+    // render(<App />); con beforeEach nos ahorramos repetir esta línea
+    screen.getByLabelText('Input:');
+  })
+
+  test('should select input element by placeholder test', () => {
+    // render(<App />); con beforeEach nos ahorramos repetir esta línea
+    screen.getByPlaceholderText('Example');
+  })
+
+  test('should select the input element by its role with queryByRole', () => {
+    const result = screen.queryByRole('textbox');
+    console.log(result); //El resultado será null
+  })
+
+  test('should return null, should not find the role "whatever" in our component', () => {
+    expect(screen.queryByRole('whatever')).toBeNull();
   })
 
 });
