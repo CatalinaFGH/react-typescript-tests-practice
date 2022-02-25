@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { findByText, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 import { getUser } from './get-user';
 import { mocked } from 'jest-mock';
@@ -54,7 +54,7 @@ describe('when everything is OK', () => {
 
   test('should select the input element by its role with queryByRole', () => {
     const result = screen.queryByRole('textbox');
-    console.log(result); //El resultado será null
+    //console.log(result); //El resultado será null
   })
 
   test('should return null, should not find the role "whatever" in our component', () => {
@@ -70,6 +70,17 @@ describe('when the component fetches the user successfully', () => {
   test('should call getUser once', async () => {
     render(<App/>);
     await waitFor(() => expect(mockGetUser).toHaveBeenCalledTimes(1));
+  })
 
+  test('should render the username passed', async () => {
+    const name = 'John';
+    // mockGetUser.mockImplementationOnce(() =>
+    //   Promise.resolve({ id: '1', name })
+    // );
+    mockGetUser.mockResolvedValueOnce({ id: '1', name });
+    render(<App/> );
+    expect(screen.queryByText(/UserName/)).toBeNull();
+    expect(await screen.findByText(/Username/)).toBeInTheDocument();
+    expect(await screen.findByText(`Username: ${name}`)).toBeInTheDocument();
   })
 });
