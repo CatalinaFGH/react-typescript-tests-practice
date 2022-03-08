@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import { User, getUser } from "./get-user";
+import CustomInput from "./CustomInput";
 
 function App() {
   const [text, setText] = useState("");
@@ -28,27 +29,6 @@ function App() {
         Input:
       </CustomInput> */}
       <p>You typed: {text ? text : "..."}</p>
-    </div>
-  );
-}
-
-interface CustomInputProps {
-  children: React.ReactNode;
-  value: string;
-  onChange(event: React.ChangeEvent<HTMLInputElement>): void;
-}
-
-function CustomInput({ children, value, onChange }: CustomInputProps) {
-  return (
-    <div>
-      <label htmlFor="search">{children}</label>
-      <input
-        placeholder="Example"
-        id="search"
-        type="text"
-        value={value}
-        onChange={onChange}
-      />
     </div>
   );
 }
