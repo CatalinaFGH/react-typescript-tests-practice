@@ -1,5 +1,5 @@
 import React from 'react';
-import { findByText, render, screen, waitFor } from '@testing-library/react';
+import { findByText, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 import { getUser } from './get-user';
 import { mocked } from 'jest-mock';
@@ -44,8 +44,9 @@ describe('when everything is OK', () => {
     screen.getAllByRole('textbox'); //También debemos usar All aquí
     // expect(screen.getByRole('textbox')).toBeInTheDocument();
     expect(screen.getAllByRole('textbox')[0]).toBeInTheDocument(); //Recibirá un array de inputs, por eso necesitamos especificar una posicion para testear.
-    expect(screen.getAllByRole('textbox')[1]).toBeInTheDocument();
-    expect(screen.getAllByRole('textbox').length).toEqual(2);
+    // expect(screen.getAllByRole('textbox')[1]).toBeInTheDocument(); //Este test ya no funcionará porque borramos el input duplicado
+    // expect(screen.getAllByRole('textbox').length).toEqual(2); //Este test tampoco funcionará porque ahora solo hay 1 input
+    expect(screen.getAllByRole('textbox').length).toEqual(1);
   })
 
   test('should select a label element by its text', () => {
@@ -90,4 +91,19 @@ describe('when the component fetches the user successfully', () => {
     expect(await screen.findByText(/Username/)).toBeInTheDocument();
     expect(await screen.findByText(`Username: ${name}`)).toBeInTheDocument();
   })
+});
+
+describe("When the user enter some text in the input element", () => {
+  test('should display the text in the screen', async () => {
+    render(<App/>);
+    await waitFor(() => expect(mockGetUser).toHaveBeenCalled());
+
+    expect(screen.getByText(/You typed: .../));
+
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: 'David'},
+    });
+
+    expect(screen.getByText(/You typed: David/));
+  });
 });
