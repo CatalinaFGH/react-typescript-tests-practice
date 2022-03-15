@@ -73,7 +73,8 @@ describe('when everything is OK', () => {
 
   test('should select the input element by its role with queryByRole', () => {
     const result = screen.queryByRole('textbox');
-    //console.log(result); //El resultado será null
+    // console.log(result); //El resultado NO será null ya que estamos haciendo algo con el elemento
+    expect(result).not.toBeNull();
   })
 
   test('should return null, should not find the role "whatever" in our component', () => {
@@ -108,7 +109,7 @@ describe("When the user enter some text in the input element", () => {
   test('should display the text in the screen', async () => {
     render(<App/>);
     await waitFor(() => expect(mockGetUser).toHaveBeenCalled());
-
+// El usuario aún no ha escrito nada
     expect(screen.getByText(/You typed: .../));
 
     // fireEvent.change(screen.getByRole('textbox'), {
@@ -118,5 +119,9 @@ describe("When the user enter some text in the input element", () => {
     await userEvent.type(screen.getByRole('textbox'), 'David')
 
     expect(screen.getByText(/You typed: David/));
+
+    expect(screen.getByText(/You typed: David/)).toBeInTheDocument();
+// findByText espera recibir un objeto, por ende va a revisar si encuentra o no el elemento y lo va a mostrar en el objeto
+    expect(screen.findByText(/David/)).toBeTruthy();
   });
 });
