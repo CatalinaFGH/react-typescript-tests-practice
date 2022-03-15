@@ -99,6 +99,7 @@ describe('when the component fetches the user successfully', () => {
     // );
     mockGetUser.mockResolvedValueOnce({ id: '1', name });
     render(<App/> );
+    // Es mejor separar los expect, hacer test pequeños y separar los elementos a testear, asi es más fácil identificar errores. Keep it simple!
     expect(screen.queryByText(/UserName/)).toBeNull();
     expect(await screen.findByText(/Username/)).toBeInTheDocument();
     expect(await screen.findByText(`Username: ${name}`)).toBeInTheDocument();
