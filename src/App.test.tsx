@@ -8,15 +8,16 @@ import { mocked } from 'jest-mock';
 jest.mock('./get-user');
 const mockGetUser = mocked(getUser, true);
 
+// describe es lo que se ve como "Test Suites" y los "Test" son los test dentro de los describe
 describe('when everything is OK', () => {
   beforeEach(async() => {  // Con beforeEach podemos evitar repetir el render(<componente/>)
     render(<App/>);
     await waitFor(() => expect(mockGetUser).toHaveBeenCalled());
   })
-  test('should render the App component without crashing', () => {
+  //test('should render the App component without crashing', () => {
     // render(<App />); con beforeEach nos ahorramos repetir esta línea
-    screen.debug();
-  })
+    // screen.debug(); //El debug sirve para imprimir todo lo que se pase al test en la consola para buscar errores en los test
+  //})
 // Testeamos que exista o no una palabra en el documento con try & catch
   // test('should select the children that is being passed to the CustomInput component', () => {
   //   render(<App />);
@@ -30,7 +31,15 @@ describe('when everything is OK', () => {
   //   expect(error).toBeDefined();
   // })
 
+  // Podemos usar "it" (se usa mas en units) en vez de test
   test('should select the children that is being passed to the CustomInput component', () => {
+    // render(<App />); con beforeEach nos ahorramos repetir esta línea
+    // screen.getByText('Input:');
+    screen.getAllByText('Input:'); //Debemos usar el All porque duplicamos el input, por ende debe buscar varios elementos, no solo uno.
+//  screen.getByText(/Input/);
+//  Podemos poner una regular expression en vez de un string
+  })
+  it('should select the children that is being passed to the CustomInput component', () => {
     // render(<App />); con beforeEach nos ahorramos repetir esta línea
     // screen.getByText('Input:');
     screen.getAllByText('Input:'); //Debemos usar el All porque duplicamos el input, por ende debe buscar varios elementos, no solo uno.
@@ -41,13 +50,14 @@ describe('when everything is OK', () => {
   test('should select the input element by its role', () => {
     // render(<App />); con beforeEach nos ahorramos repetir esta línea
     // textbox equivale al role del input
-    // screen.getByRole('textbox'); 
-    screen.getAllByRole('textbox'); //También debemos usar All aquí
+    // screen.getByRole('textbox');
+    // Es mucho mejor guardar la informacion a testear dentro de una variable, para que se lea mucho más ágil y simple. DONT REPEAT YOURSELF(DRY). Creamos una variable y luego si queremos cambiar la info, solo será UNA VEZ.
+    const textbox = screen.getAllByRole('textbox'); //También debemos usar All aquí
     // expect(screen.getByRole('textbox')).toBeInTheDocument();
-    expect(screen.getAllByRole('textbox')[0]).toBeInTheDocument(); //Recibirá un array de inputs, por eso necesitamos especificar una posicion para testear.
+    expect(textbox[0]).toBeInTheDocument(); //Recibirá un array de inputs, por eso necesitamos especificar una posicion para testear.
     // expect(screen.getAllByRole('textbox')[1]).toBeInTheDocument(); //Este test ya no funcionará porque borramos el input duplicado
     // expect(screen.getAllByRole('textbox').length).toEqual(2); //Este test tampoco funcionará porque ahora solo hay 1 input
-    expect(screen.getAllByRole('textbox').length).toEqual(1);
+    expect(textbox.length).toEqual(1);
   })
 
   test('should select a label element by its text', () => {
